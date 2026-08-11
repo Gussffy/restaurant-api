@@ -1,14 +1,47 @@
 CREATE DATABASE IF NOT EXISTS dev_api;
 USE dev_api;
 
-CREATE TABLE IF NOT EXISTS Clientes (
+CREATE TABLE IF NOT EXISTS Pratos (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
-  idade INT NOT NULL,
-  UF CHAR(2) NOT NULL
+  descricao VARCHAR(255) NULL,
+  categoria VARCHAR(100) NOT NULL,
+  preco DECIMAL(10, 2) NOT NULL,
+  CONSTRAINT chk_preco CHECK (preco >= 0)
 );
 
-INSERT INTO Clientes (nome, idade, UF) VALUES
-  ('João Silva', 30, 'SP'),
-  ('Maria Souza', 25, 'RJ'),
-  ('Carlos Pereira', 40, 'MG');
+CREATE TABLE IF NOT EXISTS Pedidos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  cliente VARCHAR(100) NOT NULL,
+  data DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  status ENUM('Aberto', 'Em preparacao', 'Pronto', 'Entregue', 'Cancelado') NOT NULL DEFAULT 'Aberto'
+);
+
+CREATE TABLE IF NOT EXISTS ItensPedido (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  pedido_id INT NOT NULL,
+  prato_id INT NOT NULL,
+  quantidade INT NOT NULL,
+  CONSTRAINT chk_quantidade CHECK (quantidade > 0),
+  CONSTRAINT fk_itens_pedido FOREIGN KEY (pedido_id) REFERENCES Pedidos(id) ON DELETE CASCADE,
+  CONSTRAINT fk_itens_prato FOREIGN KEY (prato_id) REFERENCES Pratos(id) ON DELETE RESTRICT
+);
+
+INSERT INTO Pratos (nome, descricao, categoria, preco) VALUES
+  ('Pizza Margherita', 'Molho de tomate, mussarela e manjericão', 'Pizza', 39.90),
+  ('Pizza Pepperoni', 'Molho de tomate, mussarela e pepperoni', 'Pizza', 45.90),
+  ('Hambúrguer Artesanal', 'Pão brioche, blend 180g e cheddar', 'Lanche', 28.50),
+  ('Salada Caesar', 'Alface, frango grelhado, parmesão e molho caesar', 'Salada', 32.00),
+  ('Refrigerante Lata', 'Refrigerante 350ml', 'Bebida', 6.50);
+
+INSERT INTO Pedidos (cliente, data, status) VALUES
+  ('João Silva', '2026-08-10 12:30:00', 'Entregue'),
+  ('Maria Souza', '2026-08-10 13:45:00', 'Em preparacao'),
+  ('Carlos Pereira', '2026-08-10 14:10:00', 'Aberto');
+
+INSERT INTO ItensPedido (pedido_id, prato_id, quantidade) VALUES
+  (1, 1, 2),
+  (1, 5, 2),
+  (2, 3, 1),
+  (2, 5, 1),
+  (3, 4, 1);

@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum StatusPedido {
+  Aberto
+  Em_preparacao
+  Pronto
+  Entregue
+  Cancelado
+}
+
+model Prato {
+  id          Int          @id @default(autoincrement())
+  nome        String       @db.VarChar(100)
+  descricao   String?      @db.VarChar(255)
+  categoria   String       @db.VarChar(100)
+  preco       Decimal      @db.Decimal(10, 2)
+  itensPedido ItemPedido[]
+
+  @@map("Pratos")
+}
+
+model Cliente {
+  id        Int      @id @default(autoincrement())
+  nome      String   @db.VarChar(100)
+  email     String   @unique @db.VarChar(150)
+  telefone  String?  @db.VarChar(20)
+  pedidos   Pedido[]
+
+  @@map("Clientes")
+}
+
+model Pedido {
+  id        Int          @id @default(autoincrement())
+  cliente   Cliente      @relation(fields: [clienteId], references: [id])
+  clienteId Int          @map("cliente_id")
+  data      DateTime     @default(now())
+  status    StatusPedido @default(Aberto)
+  itens     ItemPedido[]
+
+  @@map("Pedidos")
+}
+
+model ItemPedido {
+  id         Int     @id @default(autoincrement())
+  pedido     Pedido  @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  pedidoId   Int     @map("pedido_id")
+  prato      Prato   @relation(fields: [pratoId], references: [id], onDelete: Restrict)
+  pratoId    Int     @map("prato_id")
+  quantidade Int
+
+  @@map("ItensPedido")
+}

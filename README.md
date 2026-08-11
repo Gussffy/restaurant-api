@@ -4,9 +4,11 @@ API REST para gerenciamento simples dos pedidos de um restaurante.
 
 ## Integrantes
 
-- Nome do integrante 1
-- Nome do integrante 2
-- Nome do integrante 3
+- CARLOS PATRICK DE AGUIAR LIMA COSTA
+- GUILHERME RODRIGUES FRANCA DA ROCHA
+- GUSTAVO SANTOS FRANCA
+- JOAO VICTOR CARVALHO DE OLIVEIRA
+- JOSE VITOR OLIVEIRA PATRIOTA SANTOS
 
 ## Descrição
 

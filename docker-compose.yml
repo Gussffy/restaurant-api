@@ -4,31 +4,15 @@ services:
     container_name: dev-api-db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: 2866
-      MYSQL_DATABASE: restaurant-api
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: dev_api
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: app123
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p2866"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-  api:
-    build: .
-    container_name: dev-api
-    restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      PORT: 3000
-      DATABASE_URL: mysql://root:2866@db:3306/restaurant-api
-    ports:
-      - "3000:3000"
 
 volumes:
   db_data:

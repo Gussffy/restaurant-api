@@ -1,43 +1,85 @@
 const clienteService = require('../services/clienteService');
+const { tratarErro } = require('../utils/errorHandler');
 
-function naoImplementado(res) {
-  res.status(501).json({ message: 'Endpoint ainda não implementado' });
+function validarId(id) {
+  const numero = parseInt(id, 10);
+  if (isNaN(numero) || numero <= 0) {
+    throw new Error('ID deve ser um número válido');
+  }
+  return numero;
 }
 
 const clienteController = {
   async listar(req, res, next) {
     try {
-      const clientes = await clienteService.listar();
-      res.json(clientes);
+      const dados = await clienteService.listarTodos();
+      res.status(200).json({
+        success: true,
+        message: 'Clientes listados com sucesso',
+        data: dados,
+        total: dados.length
+      });
     } catch (error) {
-      next(error);
+      tratarErro(error, next);
     }
   },
-  consultar(req, res) {
-    naoImplementado(res);
-  },
-  async cadastrar(req, res, next) {
-    const { nome, email, telefone, senha, endereco } = req.body;
 
-    if (!nome || !email || !senha) {
-      return res.status(400).json({ message: 'nome, email e senha são obrigatórios' });
-    }
-
+  async consultar(req, res, next) {
     try {
-      const cliente = await clienteService.cadastrar({ nome, email, telefone, senha, endereco });
-      res.status(201).json(cliente);
+      const id = validarId(req.params.id);
+      const dados = await clienteService.buscarPorId(id);
+      res.status(200).json({
+        success: true,
+        message: 'Cliente encontrado',
+        data: dados
+      });
     } catch (error) {
-      if (error.code === 'P2002') {
-        return res.status(409).json({ message: 'Já existe um cliente com esse email' });
-      }
-      next(error);
+      tratarErro(error, next);
     }
   },
-  atualizar(req, res) {
-    naoImplementado(res);
+
+  async cadastrar(req, res, next) {
+    try {
+      const dados = await clienteService.criarCliente(req.body);
+      res.status(201).json({
+        success: true,
+        message: 'Cliente criado com sucesso',
+        data: dados
+      });
+    } catch (error) {
+      tratarErro(error, next);
+    }
   },
-  remover(req, res) {
-    naoImplementado(res);
+
+  async atualizar(req, res, next) {
+    try {
+      const id = validarId(req.params.id);
+      if (!req.body || Object.keys(req.body).length === 0) {
+        throw new Error('Nenhum campo foi informado para atualização');
+      }
+      const dados = await clienteService.atualizarCliente(id, req.body);
+      res.status(200).json({
+        success: true,
+        message: 'Cliente atualizado com sucesso',
+        data: dados
+      });
+    } catch (error) {
+      tratarErro(error, next);
+    }
+  },
+
+  async remover(req, res, next) {
+    try {
+      const id = validarId(req.params.id);
+      const dados = await clienteService.deletarCliente(id);
+      res.status(200).json({
+        success: true,
+        message: 'Cliente removido com sucesso',
+        data: dados
+      });
+    } catch (error) {
+      tratarErro(error, next);
+    }
   }
 };
 

@@ -9,6 +9,7 @@ function validarId(id) {
   return numero;
 }
 
+
 const pratoController = {
   async listar(req, res, next) {
     try {

@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 CREATE DATABASE IF NOT EXISTS dev_api;
 USE dev_api;
 
@@ -45,9 +47,9 @@ INSERT INTO Pratos (nome, descricao, categoria, preco) VALUES
   ('Refrigerante Lata', 'Refrigerante 350ml', 'Bebida', 6.50);
 
 INSERT INTO Clientes (nome, email, telefone, senha, endereco) VALUES
-('João Silva', 'joao.silva@email.com', '(11) 99999-0001', 'senha123', 'Rua das Flores, 100 - São Paulo/SP'),
-('Maria Souza', 'maria.souza@email.com', '(11) 99999-0002', 'senha123', 'Av. Paulista, 200 - São Paulo/SP'),
-('Carlos Pereira', 'carlos.pereira@email.com', '(11) 99999-0003', 'senha123', NULL);
+('João Silva', 'joao.silva@email.com', '(11) 99999-0001', '$2b$10$wqQ3KBiJmgSt7bh4buf2LOoDFTCO8j1sHjlIknoZhWsOKgXgEiYqu', 'Rua das Flores, 100 - São Paulo/SP'),
+('Maria Souza', 'maria.souza@email.com', '(11) 99999-0002', '$2b$10$wqQ3KBiJmgSt7bh4buf2LOoDFTCO8j1sHjlIknoZhWsOKgXgEiYqu', 'Av. Paulista, 200 - São Paulo/SP'),
+('Carlos Pereira', 'carlos.pereira@email.com', '(11) 99999-0003', '$2b$10$wqQ3KBiJmgSt7bh4buf2LOoDFTCO8j1sHjlIknoZhWsOKgXgEiYqu', NULL);
 INSERT INTO Pedidos (cliente_id, data, status) VALUES
   (1, '2026-08-10 12:30:00', 'Entregue'),
   (2, '2026-08-10 13:45:00', 'Em_preparacao'),

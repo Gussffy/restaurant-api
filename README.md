@@ -51,6 +51,30 @@ Status aceitos no pedido:
 
 ## Instruções para executar o projeto
 
+### Opção 1: tudo via Docker (banco + API)
+
+1. Clone o repositório e acesse a pasta:
+   ```bash
+   git clone <url-do-repositorio>
+   cd dev-api
+   ```
+2. Configure o `.env` com base em `.env.example`.
+3. Suba o banco de dados e a API:
+   ```bash
+   docker compose up -d --build
+   ```
+4. Gere o client do Prisma e sincronize o schema:
+   ```bash
+   npm run prisma:generate
+   npm run db:push
+   ```
+5. Acesse a API e o Swagger:
+
+   API: `http://localhost:3000`  
+   Swagger UI: `http://localhost:3000/api-docs`
+
+### Opção 2: API local (Node) + banco via Docker
+
 1. Clone o repositório e acesse a pasta:
    ```bash
    git clone <url-do-repositorio>
@@ -61,9 +85,9 @@ Status aceitos no pedido:
    npm install
    ```
 3. Configure o `.env` com base em `.env.example`.
-4. Suba o banco com Docker:
+4. Suba somente o banco de dados:
    ```bash
-   docker compose up -d
+   docker compose up -d db
    ```
 5. Gere o client do Prisma e sincronize o schema:
    ```bash
@@ -75,24 +99,12 @@ Status aceitos no pedido:
    npm start
    ```
 
-API: `http://localhost:3000`  
-Swagger UI: `http://localhost:3000/api-docs`
-
-### Executar a API com Docker
-
-```bash
-# Build da imagem
-docker build -t dev-api .
-
-# Executar o container (MySQL pode rodar via docker compose)
-docker run -p 3000:3000 -e "DATABASE_URL=mysql://appuser:app123@host.docker.internal:3306/dev_api" dev-api
-```
-
 ## Configuração do banco de dados
 
 - Banco: **MySQL 8**
 - Inicialização: `docker-compose.yml`
-- Seed inicial: `db/init.sql`
+- Seed inicial: `db/init.sql` (executado automaticamente na criação do container)
+- Seed alternativo via Prisma: `npm run db:seed` (usa `prisma/seed.js`)
 
 Exemplo de `.env`:
 
